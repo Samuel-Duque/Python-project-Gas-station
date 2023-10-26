@@ -1,7 +1,6 @@
 import csv
 
 
-
 print("Bem-vindo à nossa plataforma de agendamento de serviços,\nonde facilitamos o processo para você agendar seu atendimento\nem nosso estabelecimento!\n")
 funcionarios = {
     "Adenair":  "Disponivel",
