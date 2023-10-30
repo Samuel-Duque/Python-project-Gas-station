@@ -1,0 +1,7 @@
+placa - data - funcionario - serviço
+
+xyz-3344 : 29.12 - Jorge - Oleo
+abc-1234 : 30.10 - Jorge - Oleo
+php-3456 : 21.09 - Jorge - Oleo
+ert-9567 : 27.8 - Jorge - Oleo
+tre-9090 : 19.12 - Jorge - Oleo
