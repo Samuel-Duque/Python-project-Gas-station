@@ -9,6 +9,8 @@ def imprimir_dados(arquivo):
             linha_sem = linha.replace(",", ":").replace("(", "").replace(")", "").replace("'", "")
             print(linha_sem, end='')
 
+
+
 opcao = ""
 
 funcionarios = [ "Adenair", "Jorge", "Alberto", "Helena", "Benjamin", "Ayla", "Bentancur" ]
@@ -28,8 +30,8 @@ funcionarios = {
 print("Bem vindo a area de gerenciamento de serviços automotivos, para prosseguir basta escolher uma das opções abaixo!\n")
 
 while True: 
-    print("\n[0] Imprima a tabela dos registros anteriores")
-    print("[1] Fazer registro e inserir no histórico")
+    
+    print("\n[1] Fazer registro e inserir no histórico")
     print("[2] imprimi o histórico dos veiculos")
     print("[3] Agendamento de Serviço")
     print("[4] sair\n")
@@ -42,13 +44,7 @@ while True:
             print("Opção inválida")
     match escolha_inicial:
 #imprimi os registros anteriores
-        case 0:
-            if registro == "":
-                print("A lista de registro está vazia")
-            with open ("Registros.txt", "r") as arquivo:
-                for linha in arquivo:
-                    print(linha)
-                print("\n")
+        
 #faz um novo registro
         case 1:
             opcao = ""
@@ -105,7 +101,7 @@ while True:
                                                 print("Data inválida, tente novamente")
                                         except ValueError:
                                                 print("Data inválida, tente novamente")
-                                    data = dia,"/", mes   
+                                    data = f"{dia}/{mes}"   
                                     veiculos[f"{placa_letra}-{placa_numero}"] = {"funcionario": opcao_funcionarios,
                                                                                 "data": data,
                                                                                 "serviços": opcao_servicos,
@@ -113,8 +109,11 @@ while True:
                                                                                 "tempo de serviço": opcao_hora}
                                     print("Veiculo adicionado com sucesso!!")
                                     informacoes = veiculos[f"{placa_letra}-{placa_numero}"]
-                                    with open ("historico.txt", "a") as arquivo:
-               
+                                    with open ("historico.txt", "w") as arquivo:        
+                                        for placa, informacoes in veiculos.items():
+                                            informacoes_formatadas = f"Placa: {placa}\nFuncionário: {informacoes['funcionario']}\ndata do Serviço: {informacoes['data']}\nHorário: {informacoes['serviços']}\nTempo de serviço: {informacoes['tempo de serviço']}\n" + "-"*40
+                                        arquivo.write(informacoes_formatadas)
+        
                 #escolha de sim ou não para o historico
                                         while True:
                                                 opcao = input("Deseja marcar outra consulta? [s/n]: ")
@@ -146,12 +145,24 @@ while True:
             opcao = ""
             while opcao != "N":
                 
-                imprimir_dados("funcionarios.txt")
-
+                def imprimi_agenda():
+                    try:
+                        with open("funcionario.txt", "r") as arquivo:
+                            for linha in arquivo:
+                                funcionario, disponibilidade = linha.strip().split(": ")
+                                funcionarios[funcionario] = disponibilidade
+                        return funcionarios
+                    except FileNotFoundError:
+                        return {}
+                funcionarios = imprimi_agenda()          
+                for funcionario, disponibilidade in funcionarios.items():
+                    print(funcionario,":", disponibilidade)
 
                 escolha = input("\nEscolha um funcionário: ")
                 maiusculo = escolha.capitalize()
-                if  maiusculo in funcionarios:
+            
+                if maiusculo in funcionarios:
+                    
                     if funcionarios[maiusculo] == "Disponivel":
                         while True:   
                             try:
@@ -174,16 +185,17 @@ while True:
                                     if opcao != "S" and opcao != "N":
                                         print("Opção inválida, por favor insira S(sim) ou N(não)")
                                     elif opcao == "S":
-                                        with open ("funcionarios.txt", "w") as arquivo:
-                                            for valor in funcionarios.items():
-                                                arquivo.write(str(valor) + '\n')
+                                        with open("funcionario.txt", "w") as arquivo:
+                                            for funcionario, disponibilidade in funcionarios.items():
+                                                arquivo.write(f"{funcionario}: {disponibilidade}\n")
+                                
                                         break
                                     elif opcao == "N":
                                         print("Função encerrada")
                                         
-                                        with open ("funcionarios.txt", "w") as arquivo:
-                                            for valor in funcionarios.items():
-                                                arquivo.write(str(valor) + '\n')
+                                        with open("funcionario.txt", "w") as arquivo:
+                                            for funcionario, disponibilidade in funcionarios.items():
+                                                arquivo.write(f"{funcionario}: {disponibilidade}\n")
 
                                         break        
                     
@@ -201,9 +213,7 @@ while True:
         case 4:
             print("\nPrograma encerrado, obrigado pela preferência!!")
             break 
-
-        case 5:
-            print(veiculos)                
+               
         case _:
             print("Opção inválida")
 
