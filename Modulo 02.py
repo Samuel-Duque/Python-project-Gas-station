@@ -14,9 +14,8 @@ opcao = ""
 funcionarios = [ "Adenair", "Jorge", "Alberto", "Helena", "Benjamin", "Ayla", "Bentancur" ]
 servicos = ["Oleo", "Balanceamento"]
 registro = {}
-veiculos = {"xyz-3344": "29.12",
-            "abc-1234": "30.10",
-            "php-3456": "21.09"}
+veiculos = {}
+lista = []
 funcionarios = {
             "Adenair":  "Disponivel",
             "Jorge" : "Disponivel",
@@ -30,11 +29,10 @@ print("Bem vindo a area de gerenciamento de serviços automotivos, para prossegu
 
 while True: 
     print("\n[0] Imprima a tabela dos registros anteriores")
-    print("[1] Fazer um novo registro")
-    print("[2] Adicionar um novo veiculo no histórico")
-    print("[3] Ver Histórico de veiculos")
-    print("[4] Agendamento de Serviço")
-    print("[5] sair\n")
+    print("[1] Fazer registro e inserir no histórico")
+    print("[2] imprimi o histórico dos veiculos")
+    print("[3] Agendamento de Serviço")
+    print("[4] sair\n")
     
     while True:
         try:
@@ -47,16 +45,13 @@ while True:
         case 0:
             if registro == "":
                 print("A lista de registro está vazia")
-            with open ("Registros.txt", "r")as arquivo:
+            with open ("Registros.txt", "r") as arquivo:
                 for linha in arquivo:
                     print(linha)
                 print("\n")
 #faz um novo registro
         case 1:
-            opcao_hora = ""
-            opcao_funcionarios = ""
             opcao = ""
-            opcao_servicos= ""
             while opcao != "N" :
                 linhas("Funcionários")
                 for nomes in funcionarios:
@@ -87,81 +82,65 @@ while True:
                             registro[opcao_funcionarios] = opcao_servicos
                             print("Registro salvo com sucesso!")
                             with open("Registros.txt", "a") as arquivo:
-                                arquivo.write(f"{nomes} - {servicos} - {opcao_hora} - {opcao_pecas}")
+                                arquivo.write(f"{opcao_funcionarios} - {opcao_servicos} - {opcao_hora} - {opcao_pecas}\n")
 
-#escolha de sim ou não para registro
-                            while True:
-                                opcao = input("Deseja marcar outra consulta? [s/n]: ")
-                                opcao = opcao.capitalize()
-                                if opcao != "S" and opcao != "N":
-                                     print("Opção inválida, por favor insira S(sim) ou N(não)")
-                                elif opcao == "S":
-                                    break
-                                elif opcao == "N":
-                                    print("\nRegistro encerrado")
-                                    break
+
+
+                            escolha_historico = ""
+                    
+                            print("\ninforme a placa do veiculo\n")
+                            placa_letra = input("Digite as letras(3 digitos): ")
+
+                            if len(placa_letra) == 3:
+                                placa_numero = input("Digite o número(4 digitos): ") 
+                                if len(placa_numero) == 4:
+                                    while True:
+                                        try:
+                                            dia = int(input("Informe o dia: "))
+                                            mes = int(input("informe o mês: "))
+                                
+                                            if mes <=12 and dia <=31:
+                                                break
+                                            else:
+                                                print("Data inválida, tente novamente")
+                                        except ValueError:
+                                                print("Data inválida, tente novamente")
+                                    data = dia,"/", mes   
+                                    veiculos[f"{placa_letra}-{placa_numero}"] = {"funcionario": opcao_funcionarios,
+                                                                                "data": data,
+                                                                                "serviços": opcao_servicos,
+                                                                                "peças": opcao_pecas,
+                                                                                "tempo de serviço": opcao_hora}
+                                    print("Veiculo adicionado com sucesso!!")
+                                    informacoes = veiculos[f"{placa_letra}-{placa_numero}"]
+                                    with open ("historico.txt", "a") as arquivo:
+               
+                #escolha de sim ou não para o historico
+                                        while True:
+                                                opcao = input("Deseja marcar outra consulta? [s/n]: ")
+                                                opcao = opcao.capitalize()
+                                                if opcao != "S" and opcao != "N":
+                                                    print("Opção inválida, por favor insira S(sim) ou N(não)")
+                                                elif opcao == "S":
+                                                    break
+                                                elif opcao == "N":
+                                                    print("\nRegistro encerrado")
+                                                    break
                     else:
                         print("Serviço inválido, por favor tente novamente!\n")
 
                 else:
                     print("Funcionário não encontrado, por favor tente novamente!\n")
-
         
-#adicionar um novo veiculo ao historico 
-        case 2:
-            escolha_historico = ""
-            while escolha_historico != "N":
-                
-                print("\ninforme a placa do veiculo\n")
-                placa_letra = input("Digite as letras(3 digitos): ")
 
-                if len(placa_letra) == 3:
-                    placa_numero = input("Digite o número(4 digitos): ") 
-                    if len(placa_numero) == 4:
-                        while True:
-                            try:
-                                dia = int(input("Informe o dia: "))
-                                mes = int(input("informe o mês: "))
-                                if mes <=12 and dia <=31:
-                                    break
-                                else:
-                                    print("Data inválida, tente novamente")
-                            except ValueError:
-                                print("Data inválida, tente novamente")
-                        
-                        veiculos[f"{placa_letra}-{placa_numero}"] = f"{dia}.{mes}"
-                        print("Veiculo adicionado com sucesso!!")
-                        with open ("historico.txt", "w") as arquivo:
-                            arquivo.write("placa - data - funcionario - serviço\n")
-                            for letra, numero in veiculos.items():
-                                arquivo.write(f"\n{letra} : {numero} - {opcao_funcionarios} - {opcao_servicos}")
-#escolha de sim ou não para o historico
-                        while True:
-                                escolha_historico = input("Deseja adicionar outro veículo? [s/n]: ")
-                                escolha_historico = escolha_historico.capitalize()
-                                if escolha_historico != "S" and escolha_historico != "N":
-                                     print("Opção inválida, por favor insira S(sim) ou N(não)")
-                                elif escolha_historico == "S":
-                                    break
-                                elif escolha_historico == "N":
-                                    print("\nHistórico encerrado")
-                                    break
-
-
-                        
-                        
-                    else:
-                        print("Número(s) inválido(s), por favor tente novamente")            
-                else:
-                    print("Letra(s) inválida(s), por favor tente novamente")
 #imprimi o historico dos veiculos
-        case 3:
+        case 2:
             linhas("histórico dos veiculos")
             with open ("historico.txt", "r") as arquivo:
                 for linha in arquivo:
                     print(linha)
 #agendamento dos serviços
-        case 4:
+        case 3:
             print("Bem-vindo à nossa plataforma de agendamento de serviços,\nonde facilitamos o processo para você agendar seu atendimento\nem nosso estabelecimento!\n")
             
             opcao = ""
@@ -194,7 +173,7 @@ while True:
                                     opcao = opcao.capitalize()
                                     if opcao != "S" and opcao != "N":
                                         print("Opção inválida, por favor insira S(sim) ou N(não)")
-                                    elif opcao == "s":
+                                    elif opcao == "S":
                                         with open ("funcionarios.txt", "w") as arquivo:
                                             for valor in funcionarios.items():
                                                 arquivo.write(str(valor) + '\n')
@@ -219,10 +198,12 @@ while True:
 
  
 #encerra o programa 
-        case 5:
+        case 4:
             print("\nPrograma encerrado, obrigado pela preferência!!")
             break 
-                        
+
+        case 5:
+            print(veiculos)                
         case _:
             print("Opção inválida")
 
