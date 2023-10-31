@@ -28,3 +28,4 @@ Ayla - Balanceamento - 24 - 3
 Jorge - Oleo - 20 - 30
 Helena - Oleo - 10 - 15
 Adenair - Oleo - 1 - 1
+Adenair - Oleo - 20 - 10
