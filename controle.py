@@ -1,7 +1,6 @@
 import csv
-import random
 import pandas as pd
-estoque_gasolina ={
+estoque_inicial ={
     "gasolina": 1000,
     "alcool": 1500,
     "diesel": 1200
@@ -11,77 +10,23 @@ minLimite = {
     "alcool": 250,
     "diesel": 200
 }
-#criar o arquivo csv
-# with open('estoque.csv', "w", newline='') as arquivo:
-#     cabecalho = ['produto', 'estoque']
-#     escritor_csv = csv.DictWriter(arquivo, fieldnames=cabecalho)
-#     escritor_csv.writeheader()
-
-
-        
-def salvarEstoque(dados):
-    with open('estoque.csv', "w", newline='') as arquivo:
-        cabecalho = ['produto', 'estoque']
-        escritor_csv = csv.DictWriter(arquivo, fieldnames=cabecalho)
-        escritor_csv.writeheader()
-        escritor_csv.writerows(dados)
-
-def obterEstoque():
-    try:
-        with open('estoque.csv', "r") as arquivo:
-            leitor_csv = csv.DictReader(arquivo)
-            dados = list(leitor_csv)
-        return dados
-    except FileNotFoundError:
-        return []
-
+# a complexidade total da função entrada é O(n) 
+# Se a condição for verdadeira, há uma operação de incremento (estoque_gasolina[produto] += quantidade), que também é uma operação de tempo constante O(1).
 def entrada(produto,quantidade):
-    for item in estoque_gasolina:
+    for item in estoque_inicial:
         if item == produto:
-            estoque_gasolina[produto] += quantidade
-    # estoquee = obterEstoque()
-    # quantidade = int(quantidade)
-    # produto_encontrado = False
-    # for item in estoquee:
-    #     if item['produto'] == produto:
-    #         item['estoque'] = int(item['estoque']) + quantidade
-    #         produto_encontrado = True
-    #     estoque_ordenado = ordenarEstoquePorQuantidade(estoquee)
-    #     salvarEstoque(estoque_ordenado)
-    
-def ordenarEstoquePorQuantidade(estoque):
-    return sorted(estoque, key=lambda x: int(x['estoque']))
-
+            estoque_inicial[produto] += quantidade
+   
+# a complexidade total da função saída é O(n)
+# Se a condição for verdadeira, há uma operação de decremento (estoque_gasolina[produto] -= quantidade), que também é uma operação de tempo constante O(1).
 def saida(produto,quantidade):
-    for item in estoque_gasolina:
+    for item in estoque_inicial:
         if item == produto:
-            estoque_gasolina[produto] -= quantidade
-        # estoques = obterEstoque()
-    # quantidade = int(quantidade)
-    # for item in estoques:
-    #     if item['produto'] == produto:
-    #         quantidade_atual = int(item['estoque'])
-    #         if quantidade_atual >= quantidade:
-    #             item['estoque'] = quantidade_atual - quantidade
-    #         else:
-    #             print("Quantidade insuficiente em estoque.")
-    #             return
-    # estoque_ordenado = ordenarEstoquePorQuantidade(estoques)
-    # salvarEstoque(estoque_ordenado)
-
-def carregarEstoque():
+            estoque_inicial[produto] -= quantidade
     
-    try:
-        with open("estoque.csv","r") as arquivo:
-            estoque = arquivo.read()
-            estoque = csv.DictReader(arquivo)
-        return estoque
-    except FileNotFoundError:
-        print("Arquivo não encontrado")
-        return {}
-    
+# a complexidade total da função alerta é O(n) onde n é o número de produtos no estoque  
 def alerta(produto, quantidade):
-    for produto,quantidade in estoque.items():
+    for produto,quantidade in estoque_inicial.items():
         if quantidade < minLimite[produto]:
             print("ALERTA!!")
             print(f"O estoque do produto {produto} esta abaixo do limite mínimo")
@@ -95,7 +40,7 @@ while True:
     print("[3] sair")
 
     opcao = input("Insira a escolha ")
-    print(estoque_gasolina)
+    print(estoque_inicial)
 
     if opcao == "1":
         produto = input("Insira o produto: [gasolina,alcool,diesel]")
@@ -109,8 +54,8 @@ while True:
 
     elif opcao == "3":
         break
-    #fazer o arquivo
-inserir = pd.DataFrame.from_dict(estoque_gasolina, orient='index',columns=['estoque'])
+#fazer o arquivo
+inserir = pd.DataFrame.from_dict(estoque_inicial, orient='index',columns=['estoque'])
 inserir.to_csv('estoque.csv', mode='a')
 inserir = inserir.sort_values(by='estoque')
 inserir.to_csv('estoque.csv')
